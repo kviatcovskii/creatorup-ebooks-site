@@ -112,3 +112,10 @@ falham, a rotina de fallback parou aqui sem publicar.
 **Resultado do dia 26/07: nem a rotina principal nem o fallback conseguiram publicar o "case de
 estratégia" de hoje** — as duas fontes de foto abertas usadas por este formato estavam bloqueadas
 pela rede do ambiente de nuvem na janela das 15h-15h30 (Brasília).
+
+## Segunda checagem (nova invocação do fallback, ~15h37 Brasília)
+
+Reconfirmado de forma independente: `getScheduledPosts` ainda sem post "case de estratégia" hoje;
+Openverse e Wikimedia Commons ainda os dois com `CONNECT` recusado (403) pelo gateway do proxy do
+ambiente. Mesmo bloqueio, nenhuma mudança em relação à checagem anterior. Nada publicado, nenhum
+novo método de scraping tentado.
