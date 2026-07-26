@@ -79,3 +79,36 @@ Se isso se repetir, considerar (decisão do usuário, não decisão autônoma de
   específico (o formato das 12h já resolveu um bloqueio parecido trocando pra foto fixa local, mas
   esse formato de 15h precisa de fotos diferentes por case a cada dia, então a mesma solução não
   se aplica diretamente).
+
+## Atualização — rotina de segurança (fallback), ~30 min depois
+
+Rodou como esperado quando a rotina principal falha silenciosamente. Confirmado via
+`getScheduledPosts` que nenhum post "case de estratégia" tinha saído hoje (só os das 09h e 12h,
+formatos diferentes) — rotina principal realmente não publicou nada, sem erro visível pro usuário.
+
+Instrução desta rodada trazia uma atualização (2026-07-26) da subseção "Como baixar as fotos":
+testar Openverse primeiro e, se falhar, testar Wikimedia Commons como 2ª fonte antes de desistir.
+
+Testado:
+```
+curl -s -o /dev/null -w "%{http_code}" --max-time 8 https://api.openverse.org/v1/images/?q=test
+→ 000 (CONNECT tunnel failed, gateway respondeu 403 Forbidden)
+
+curl -s -o /dev/null -w "%{http_code}" --max-time 8 "https://commons.wikimedia.org/w/api.php?action=query&format=json"
+→ 000 (CONNECT tunnel failed, gateway respondeu 403 Forbidden)
+```
+
+Repetido duas vezes cada (com espera entre tentativas) — mesmo resultado nas duas rodadas. Testado
+também um domínio de controle (`https://www.google.com`) pra distinguir bloqueio específico de
+bloqueio geral de rede: **também voltou 403 no CONNECT**, confirmando (via
+`$HTTPS_PROXY/__agentproxy/status`, campo `recentRelayFailures`) que é bloqueio de política do
+gateway do ambiente de hoje, não falha pontual de um domínio específico.
+
+Nenhuma foto foi baixada, nenhum case foi pesquisado, nenhuma imagem foi gerada, nenhum commit no
+`creatorup-carrosseis-automation`, nenhum `createScheduledPost` chamado (Instagram nem TikTok).
+Seguindo a instrução explícita de não inventar outro método de scraping quando as duas fontes
+falham, a rotina de fallback parou aqui sem publicar.
+
+**Resultado do dia 26/07: nem a rotina principal nem o fallback conseguiram publicar o "case de
+estratégia" de hoje** — as duas fontes de foto abertas usadas por este formato estavam bloqueadas
+pela rede do ambiente de nuvem na janela das 15h-15h30 (Brasília).
