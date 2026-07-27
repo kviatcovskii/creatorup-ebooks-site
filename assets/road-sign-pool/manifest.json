@@ -2,13 +2,14 @@
   "generated_at": "2026-07-27",
   "generated_by": "sessão local (rede confiável), método principal Higgsfield nano_banana_pro",
   "week_of": "2026-07-27",
+  "theme": "não desistir / ir atrás dos sonhos / celebrar conquistas (atualizado 2026-07-28 a pedido do usuário)",
   "items": [
-    { "file": "01-nem-tudo.jpg", "phrase": "Nem tudo que é bom faz barulho." },
-    { "file": "02-recomecar.jpg", "phrase": "Recomeçar não é fraqueza. É coragem disfarçada." },
-    { "file": "03-o-tempo.jpg", "phrase": "O tempo certo não se apressa." },
-    { "file": "04-feito-e-melhor.jpg", "phrase": "Feito é melhor que perfeito." },
-    { "file": "05-o-silencio.jpg", "phrase": "O silêncio também ensina." },
-    { "file": "06-primeiro-passo.jpg", "phrase": "O primeiro passo não precisa ser bonito." },
-    { "file": "07-sua-versao.jpg", "phrase": "Sua versão de ontem já não existe mais." }
+    { "file": "01-quem-desiste.jpg", "phrase": "Quem desiste no ensaio nunca vê a plateia de pé." },
+    { "file": "02-sonho-grande.jpg", "phrase": "Sonho grande incomoda antes de dar certo." },
+    { "file": "03-comemore.jpg", "phrase": "Comemore a vitória pequena. As grandes nascem delas." },
+    { "file": "04-a-virada-mora.jpg", "phrase": "A virada mora logo depois do quase desisti." },
+    { "file": "05-quem-tenta.jpg", "phrase": "Quem tenta pode perder. Quem não tenta já perdeu." },
+    { "file": "06-voce-ja-venceu.jpg", "phrase": "Você já venceu mais do que costuma lembrar." },
+    { "file": "07-o-sonho-nao-morre.jpg", "phrase": "O sonho não morre no não. Morre em quem para de tentar." }
   ]
 }
