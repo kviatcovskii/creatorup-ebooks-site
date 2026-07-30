@@ -1,56 +1,68 @@
-# Rotina de nuvem "case de estratégia" (15h) — 2026-07-30 — NÃO PUBLICADO
+# Case de estratégia (15h) — 2026-07-30 — rotina de fallback (segurança)
 
-## Contexto
+**Horário de execução (Brasília):** ~15h33-15h36 (30 min após trigger principal de nuvem `trig_01XjPEqCnG6pFJWRKeYdooQn`, ~15h03/04)
 
-Execução de nuvem do formato das 15h, agora rede de segurança (a rotina LOCAL das 14h50 é
-primária desde 2026-07-28 — ver `CLAUDE.md`).
+## Passo 1 — verificação no Metricool
 
-## O que foi feito
+`getScheduledPosts` (blogId 6553817, timezone America/Sao_Paulo, cobrindo 2026-07-30, extendedRange true)
+não retornou nenhum carrossel "case de estratégia" para hoje. Última publicação do dia até o momento
+da checagem: post das 12h25/12h28 (Instagram Instants). O post das 15h de ontem (2026-07-29) existe
+no histórico (case MrBeast, IDs 355550815/355550888) mas não é o de hoje.
 
-1. Clonados `creatorup-carrosseis-automation` e `creatorup-ebooks-site` com sucesso (git/GitHub
-   segue funcionando normalmente nesta execução).
-2. Lido `CLAUDE.md` inteiro e a seção completa "FORMATO CASE DE ESTRATÉGIA" do `SKILL.md`.
-3. `getScheduledPosts` (blogId 6553817, janela 2026-07-30, timezone America/Sao_Paulo,
-   extendedRange true): **nenhum post do formato "case de estratégia" hoje.** Únicos posts de hoje
-   até o momento: 09h11/09h14 (formato `parcerias-marcas`, venda de ebook) e 12h25/12h28
-   (formato "atualizações IG/TikTok"). Ou seja, a rotina LOCAL das 14h50 também não deixou rastro
-   de publicação hoje — sem duplicata a evitar, segui em frente.
-4. Testado o domínio de controle antes de qualquer fonte de foto, como manda o `SKILL.md`:
-   ```
-   curl -s -o /dev/null -w "%{http_code}" --max-time 8 https://www.google.com
-   → 000 (falha de conexão)
-   ```
-   Confirmado via `$HTTPS_PROXY/__agentproxy/status`, `recentRelayFailures`:
-   ```json
-   {"ts": "2026-07-30T18:06:11.536Z", "kind": "connect_rejected", "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)", "host": "www.google.com:443"}
-   {"ts": "2026-07-30T18:06:12.061Z", "kind": "connect_rejected", "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)", "host": "api.openverse.org:443"}
-   {"ts": "2026-07-30T18:06:12.377Z", "kind": "connect_rejected", "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)", "host": "commons.wikimedia.org:443"}
-   ```
-   Testei Openverse e Wikimedia mesmo assim (antes de ver o status do proxy) e ambos também deram
-   `000`/403 no CONNECT — mesmo padrão exato dos dias anteriores. `raw.githubusercontent.com`
-   respondeu normalmente (404 numa URL de teste, ou seja, conexão OK, só o caminho testado que não
-   existe).
+Conclusão: nem a rotina LOCAL primária (14h50, Tarefa Agendada do Windows `CreatorUp-CaseDeEstrategia-1450`)
+nem o `RemoteTrigger` de nuvem principal (`trig_01XjPEqCnG6pFJWRKeYdooQn`) publicaram até este momento.
+Este agente não tem acesso a uma tool `RemoteTrigger` nesta sessão para confirmar `last_fired_at` de
+nenhum dos dois — não dá pra saber se travaram, atrasaram, ou nem dispararam.
 
-## Onde parou
+## Passo 2 — fallback manual, teste de rede
 
-Teste do domínio de controle + fontes de foto (passo 1 da seção "Como baixar as fotos" do
-`SKILL.md`). Não cheguei a pesquisar case nem escolher marca/pessoa do dia, pois a etapa de fotos
-bloqueia antes disso ser útil.
+Testado domínio de controle conforme instrução do SKILL.md (nunca confiar em teste de dia anterior,
+testar de novo nesta execução):
 
-## Nada foi publicado
+```
+curl -s -o /dev/null -w "%{http_code}" --max-time 8 https://www.google.com
+```
 
-- Nenhuma chamada a `createScheduledPost` (nem Instagram nem TikTok).
-- Nenhum case pesquisado/escolhido, nenhuma imagem gerada, nenhum commit/push em
-  `creatorup-carrosseis-automation`.
+Resultado: **falha de conexão (curl exit 56), não HTTP 200.**
 
-## Ponto de atenção pro usuário
+Diagnóstico verboso (`curl -v`) e status do proxy (`$HTTPS_PROXY/__agentproxy/status`) confirmam a
+causa exata:
 
-**Sétimo dia seguido (25, 26, 27, 28, 29, 30/07) de bloqueio total do gateway de rede em pelo menos
-uma das execuções de nuvem desse formato**, sempre o mesmo padrão (`gateway answered 403 to
-CONNECT` mesmo no domínio de controle `google.com`). Também é o **terceiro dia seguido (28, 29,
-30/07) em que a rotina LOCAL das 14h50 não deixa rastro de ter publicado** até o horário desta
-execução de nuvem — recomendo checar
-`C:\Users\Administrador\.claude\local-headless-routines\case-de-estrategia-15h\logs\` na máquina
-local pra achar a causa exata de hoje (pode ainda publicar depois, se só está atrasada). Checagem de
-status da política de rede já agendada pro usuário em 2026-08-04 (ver `2026-07-28-diagnostico-
-rede.md`).
+```
+< HTTP/1.1 403 Forbidden
+* CONNECT tunnel failed, response 403
+```
+
+```json
+"recentRelayFailures": [
+  {
+    "ts": "2026-07-30T18:36:10.505Z",
+    "kind": "connect_rejected",
+    "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
+    "host": "www.google.com:443"
+  }
+]
+```
+
+Mesmo padrão exato (`gateway answered 403 to CONNECT`) já confirmado em 25, 26, 27 e 28/07/2026 para
+este formato/horário. Conforme instrução do SKILL.md: controle falhou → bloqueio geral do gateway
+deste ambiente de nuvem → **não testei Openverse nem Wikimedia individualmente** (já confirmado 3x
+antes que isso é redundante quando o controle falha) → parei aqui.
+
+## Onde parei
+
+Parei logo após o teste de rede do Passo 2, item 2 (teste de controle). Não cheguei a pesquisar case,
+buscar fotos, gerar carrossel, nem tocar em `createScheduledPost`. Nenhuma chamada de publicação foi
+feita nesta execução — sem risco de duplicata.
+
+## Resultado
+
+Bloqueio de rede geral confirmado (controle também falhou) — resultado aceito conforme regra do
+`CLAUDE.md` ("não é uma falha sua"), não uma falha desta rotina de fallback. Nem a rotina local, nem
+o trigger de nuvem principal, nem este fallback conseguiram publicar o "case de estratégia" de hoje
+(2026-07-30) até o momento desta execução.
+
+**Ação recomendada:** intervenção manual/interativa do usuário, igual ao caso de 28/07 (verificar
+`C:\Users\Administrador\.claude\local-headless-routines\case-de-estrategia-15h\logs\` e
+`.claude/skills/creatorup-gerar-carrossel/out/` no PC local por pesquisa/fotos já levantadas antes de
+refazer do zero).
