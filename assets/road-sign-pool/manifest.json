@@ -1,15 +1,65 @@
 {
-  "generated_at": "2026-07-27",
+  "generated_at": "2026-08-03",
   "generated_by": "sessão local (rede confiável), método principal Higgsfield nano_banana_pro",
-  "week_of": "2026-07-27",
-  "theme": "não desistir / ir atrás dos sonhos / celebrar conquistas (atualizado 2026-07-28 a pedido do usuário)",
+  "week_of": "2026-08-03",
+  "theme": "não desistir / ir atrás dos sonhos / celebrar conquistas",
+  "pool_size_note": "14 itens de propósito, NÃO 7: com 7 e rotação por módulo 7 a repetição virava certeza matemática a cada semana sem reabastecimento (incidente 2026-08-03). Ver SKILL.md.",
   "items": [
-    { "file": "01-quem-desiste.jpg", "phrase": "Quem desiste no ensaio nunca vê a plateia de pé." },
-    { "file": "02-sonho-grande.jpg", "phrase": "Sonho grande incomoda antes de dar certo." },
-    { "file": "03-comemore.jpg", "phrase": "Comemore a vitória pequena. As grandes nascem delas." },
-    { "file": "04-a-virada-mora.jpg", "phrase": "A virada mora logo depois do quase desisti." },
-    { "file": "05-quem-tenta.jpg", "phrase": "Quem tenta pode perder. Quem não tenta já perdeu." },
-    { "file": "06-voce-ja-venceu.jpg", "phrase": "Você já venceu mais do que costuma lembrar." },
-    { "file": "07-o-sonho-nao-morre.jpg", "phrase": "O sonho não morre no não. Morre em quem para de tentar." }
+    {
+      "file": "01-ninguem-aplaude.jpg",
+      "phrase": "Ninguém aplaude os bastidores. Continue mesmo assim."
+    },
+    {
+      "file": "02-plano-b.jpg",
+      "phrase": "O plano B rouba a energia do plano A."
+    },
+    {
+      "file": "03-cansaco-passa.jpg",
+      "phrase": "Cansaço passa. Arrependimento fica."
+    },
+    {
+      "file": "04-nao-esta-atrasado.jpg",
+      "phrase": "Você não está atrasado. Está construindo."
+    },
+    {
+      "file": "05-quase-parou.jpg",
+      "phrase": "Todo mundo que você admira quase parou antes."
+    },
+    {
+      "file": "06-comemorar-pequeno.jpg",
+      "phrase": "Comemorar o pequeno é treino pro grande."
+    },
+    {
+      "file": "07-dificil-nao-e.jpg",
+      "phrase": "Difícil não é impossível. É só difícil."
+    },
+    {
+      "file": "08-medo-grita.jpg",
+      "phrase": "O medo grita mais alto perto do resultado."
+    },
+    {
+      "file": "09-constroi-devagar.jpg",
+      "phrase": "Quem constrói devagar não constrói errado."
+    },
+    {
+      "file": "10-pede-constancia.jpg",
+      "phrase": "Sua meta não pede pressa. Pede constância."
+    },
+    {
+      "file": "11-ninguem-ve-esforco.jpg",
+      "phrase": "Ninguém vê o esforço. Todo mundo vê o resultado."
+    },
+    {
+      "file": "12-recomecar.jpg",
+      "phrase": "Recomeçar não apaga o quanto você já andou."
+    },
+    {
+      "file": "13-talento-abre-porta.jpg",
+      "phrase": "O talento abre a porta. A insistência entra."
+    },
+    {
+      "file": "14-um-dia-ruim.jpg",
+      "phrase": "Um dia ruim não cancela um ano inteiro."
+    }
   ]
 }

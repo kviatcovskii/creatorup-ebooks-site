@@ -1,0 +1,5 @@
+{
+  "comment": "Arquivos já publicados deste estoque. A rotina das 18h escolhe o PRIMEIRO item de manifest.items que não está aqui, publica, e acrescenta o nome do arquivo nesta lista. Nunca repete. Se todos já estiverem aqui, a rotina NÃO publica: para e deixa log. O reabastecimento semanal zera esta lista ao trocar o estoque.",
+  "pool_generated_at": "2026-08-03",
+  "used": []
+}
