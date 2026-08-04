@@ -63,3 +63,15 @@ sem o Metricool autorizado).
    rotina local nem outras execuções), mas vale conferir se o Metricool ainda está autorizado nas
    integrações do Claude Code, já que sem isso nem a rede de segurança de nuvem consegue checar
    duplicata ou publicar, mesmo em dias sem bloqueio de rede.
+
+## Confirmação — segunda execução (rede de segurança), ~15h36 Brasília (18h36 UTC)
+
+Esta é a rotina de fallback (30 min depois do trigger principal) rodando de fato, numa sessão de
+nuvem separada da que escreveu o log acima. Resultado idêntico, confirmado de novo:
+
+- Metricool MCP: mesma mensagem de autenticação pendente, ferramentas indisponíveis.
+- Domínios testados (~18h36 UTC): `google.com` → `000`, `api.openverse.org` → `000`,
+  `commons.wikimedia.org` → `000`, `raw.githubusercontent.com` → `404` (conexão OK, só sem esse
+  arquivo — confirma que só o domínio de egress geral está bloqueado, GitHub continua acessível).
+- Nenhuma ação nova possível além do que já está registrado acima. Nenhum `createScheduledPost`
+  chamado por esta execução.
