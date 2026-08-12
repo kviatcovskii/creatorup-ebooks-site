@@ -1,0 +1,6 @@
+{
+  "comment": "Estoque semanal dos 6 carrosseis de venda de ebook (formato das 9h). Reabastecido toda semana (quarta-feira) pela rotina local creatorup-ebook-pool-refill. A rotina de nuvem das 9h so LE este estoque por slug-do-dia-da-semana, nunca gera nem faz push.",
+  "generated_at": "2026-08-12",
+  "week_of": "2026-08-12",
+  "slugs": ["crescer-instagram-tiktok", "ganhar-dinheiro-creator", "parcerias-marcas", "parcerias-hoteis", "prompts-ia-criadores", "automatizar-com-claude"]
+}
