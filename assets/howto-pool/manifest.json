@@ -1,0 +1,14 @@
+{
+  "comment": "Estoque semanal do formato novo 'curso principal' (10h, todo dia seg-sab), vendendo automatizar-com-claude. Reabastecido toda semana pela rotina local creatorup-howto-pool-refill. A rotina de nuvem das 10h so LE este estoque por indice de dia-da-semana (segunda=0 ... sabado=5, domingo sem post), nunca gera nem faz push.",
+  "generated_at": "2026-08-12",
+  "week_of": "2026-08-12",
+  "slides_per_item": 5,
+  "items": [
+    "01-segunda-carrossel-novo",
+    "02-terca-pesquisa",
+    "03-quarta-corrige-sozinho",
+    "04-quinta-sem-abrir-app",
+    "05-sexta-multiplos-formatos",
+    "06-sabado-consistencia"
+  ]
+}
