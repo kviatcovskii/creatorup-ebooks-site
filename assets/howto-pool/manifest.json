@@ -1,14 +1,14 @@
 {
-  "comment": "Estoque semanal do formato 'curso principal' (10h, todo dia seg-sab), vendendo automatizar-com-claude. Redesenhado em 2026-08-17: sistema visual editorial (tokens roxo/creme dos ebooks, numeral serifado, corner-frame) no lugar das caixas escuras de chat/agendador antigas; conteudo passou a alternar entre conector do Claude em destaque e dica de ganhar dinheiro com Claude. Reabastecido toda semana pela rotina local creatorup-howto-pool-refill. A rotina de nuvem das 10h so LE este estoque por indice de dia-da-semana (segunda=0 ... sabado=5, domingo sem post), nunca gera nem faz push.",
+  "comment": "Estoque semanal do formato 'curso principal' (10h, todo dia seg-sab), vendendo automatizar-com-claude. Redesenhado em 2026-08-17, CORRIGIDO no mesmo dia: os dias de conector agora mostram a tela real do claude.ai (print de verdade emoldurado, nunca texto so descrevendo o passo) - ver draw_screenshot_card em generate_howto_week.py e assets/screenshots/. Segunda = painel Conectores, quarta = Google Calendar, sexta = Canva (curiosidade, ainda fora do ebook). Reabastecido toda semana pela rotina local creatorup-howto-pool-refill. A rotina de nuvem das 10h so LE este estoque por indice de dia-da-semana (segunda=0 ... sabado=5, domingo sem post), nunca gera nem faz push.",
   "generated_at": "2026-08-17",
   "week_of": "2026-08-17",
   "slides_per_item": 5,
   "items": [
-    "01-segunda-conector-metricool",
+    "01-segunda-conector-overview",
     "02-terca-dinheiro-carrossel-que-vende",
-    "03-quarta-conector-windsor",
+    "03-quarta-conector-google-calendar",
     "04-quinta-dinheiro-multiplos-formatos",
-    "05-sexta-conector-calendar",
+    "05-sexta-conector-canva",
     "06-sabado-dinheiro-consistencia"
   ]
 }
