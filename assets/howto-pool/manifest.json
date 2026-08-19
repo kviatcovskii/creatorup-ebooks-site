@@ -1,14 +1,14 @@
 {
-  "comment": "Estoque semanal do formato 'curso principal' (10h, todo dia seg-sab), vendendo automatizar-com-claude. Redesenhado em 2026-08-17, CORRIGIDO no mesmo dia: os dias de conector agora mostram a tela real do claude.ai (print de verdade emoldurado, nunca texto so descrevendo o passo) - ver draw_screenshot_card em generate_howto_week.py e assets/screenshots/. Segunda = painel Conectores, quarta = Google Calendar, sexta = Canva (curiosidade, ainda fora do ebook). Reabastecido toda semana pela rotina local creatorup-howto-pool-refill. A rotina de nuvem das 10h so LE este estoque por indice de dia-da-semana (segunda=0 ... sabado=5, domingo sem post), nunca gera nem faz push.",
-  "generated_at": "2026-08-17",
-  "week_of": "2026-08-17",
+  "comment": "Estoque semanal do formato 'curso principal' (10h, todo dia seg-sab), vendendo automatizar-com-claude. Redesenhado em 2026-08-17, CORRIGIDO no mesmo dia: os dias de conector agora mostram a tela real do claude.ai (print de verdade emoldurado, nunca texto so descrevendo o passo) - ver draw_screenshot_card em generate_howto_week.py e assets/screenshots/. Segunda = painel Conectores, quarta = Google Calendar, sexta = Canva (curiosidade, ainda fora do ebook) - reaproveitados de novo nesta rodada (nenhum print novo chegou em screenshots-inbox), so com angulo/gancho de copy inteiramente novo em relacao a semana anterior. Reabastecido toda semana pela rotina local creatorup-howto-pool-refill. A rotina de nuvem das 10h so LE este estoque por indice de dia-da-semana (segunda=0 ... sabado=5, domingo sem post), nunca gera nem faz push.",
+  "generated_at": "2026-08-19",
+  "week_of": "2026-08-19",
   "slides_per_item": 5,
   "items": [
-    "01-segunda-conector-overview",
-    "02-terca-dinheiro-carrossel-que-vende",
-    "03-quarta-conector-google-calendar",
-    "04-quinta-dinheiro-multiplos-formatos",
-    "05-sexta-conector-canva",
-    "06-sabado-dinheiro-consistencia"
+    "01-segunda-conector-sem-programar",
+    "02-terca-dinheiro-dado-antes-do-achismo",
+    "03-quarta-conector-sem-compromisso-em-cima",
+    "04-quinta-dinheiro-numero-confirmado",
+    "05-sexta-conector-kit-de-marca-sozinho",
+    "06-sabado-dinheiro-nunca-finge-sucesso"
   ]
 }
