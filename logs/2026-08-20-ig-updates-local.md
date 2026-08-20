@@ -13,23 +13,28 @@
   blogId 6553817, autoPublish true, agendados pra 2026-08-20T11:55/11:57 America/Sao_Paulo.
   As duas respostas vieram sem erro, status inicial PENDING.
 
-## Pendência - publicação NÃO confirmada ainda
-Em 6 checagens sucessivas de getScheduledPosts (a última bem depois da janela normal de
-30-40 min descrita no CLAUDE.md pro ciclo completo), os dois posts (id 364487648 Instagram e
-364487726 TikTok) continuam com status "PENDING", nunca viraram "PUBLISHED" nem "ERROR".
-Pra comparação: o post das 09h25 do mesmo dia (formato diferente, parceria com hotéis) já
-apareceu "PUBLISHED" desde a primeira checagem.
+## ATUALIZAÇÃO FINAL
+- **Instagram (id 364487648): CONFIRMADO PUBLISHED.** Passou por PENDING -> PUBLISHING ->
+  PUBLISHED em checagens sucessivas de getScheduledPosts.
+  Link: https://www.instagram.com/p/DcRBuK1jL9Z/
+- **TikTok (id 364487726): AINDA PENDING** depois de muitas checagens sucessivas de
+  getScheduledPosts (nunca virou PUBLISHING nem ERROR, só ficou parado em PENDING o tempo
+  todo, diferente do Instagram que evoluiu de estado). Pra comparação: o TikTok das 09h25 do
+  mesmo dia (formato diferente, parceria com hotéis) já tinha ficado PUBLISHED rapidamente.
+  Rotina encerrada sem forçar um novo createScheduledPost (evitando duplicata) e sem declarar
+  sucesso pro TikTok - ele segue como pendência real em aberto.
 
 **Observação relevante pra quem for investigar depois**: os horários reportados pela ferramenta
-de agendamento de wakeup nesta sessão vieram fora de ordem (ex.: um wakeup marcado pra 12:10 foi
-seguido por outro marcado pra 12:02, retrocedendo) e o relógio do shell mal avançou entre as
-checagens apesar de várias esperas de minutos terem sido solicitadas. Ou seja, não dá pra
-confiar que "passou tempo real de verdade" entre as checagens desta sessão - o status PENDING
-pode estar correto e ainda dentro da janela normal, não necessariamente uma falha real do
-Metricool. Não forcei um novo createScheduledPost (evitando duplicata) e não declarei sucesso.
+de agendamento de wakeup nesta sessão vieram fora de ordem em alguns pontos (ex.: um wakeup
+marcado pra 12:10 foi seguido por outro marcado pra 12:02) e o relógio do shell mal avançou
+entre as primeiras checagens apesar de esperas de minutos terem sido solicitadas - então a
+duração real decorrida entre as checagens desta sessão é incerta. Isso não muda o fato de que o
+Instagram evoluiu de estado (PENDING -> PUBLISHING -> PUBLISHED) enquanto o TikTok ficou parado
+o tempo todo no mesmo estado - essa assimetria é o sinal real de que vale a pena investigar o
+TikTok especificamente, não um artefato do relógio.
 
 ## Ação recomendada
-Conferir getScheduledPosts (blogId 6553817, ids 364487648 e 364487726) numa sessão posterior
-pra confirmar se virou PUBLISHED. Se continuar PENDING por muito mais tempo em relação ao
-horário real do relógio, ou virar ERROR, investigar causa (mesma categoria dos bloqueios já
-documentados no CLAUDE.md - token Metricool, rede, etc.).
+Conferir getScheduledPosts (blogId 6553817, id 364487726) numa sessão posterior pra ver se o
+TikTok terminou publicando sozinho. Se continuar PENDING por muito mais tempo, ou virar ERROR,
+investigar causa (mesma categoria dos bloqueios já documentados no CLAUDE.md - token Metricool,
+rede, etc.) antes de tentar republicar manualmente (pra não duplicar o post).
