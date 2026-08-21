@@ -216,21 +216,94 @@ a { color: var(--accent-ink); }
 
 </head>
 <body>
-<title>Coleção Creator Pro — Creator Up</title>
+<title>Coleção Creator Pro, Creator Up</title>
+
+<style>
+  :root{ --cu-bg:#100E17; --cu-ink:#EDEAF5; --cu-muted:#A79FC2; --cu-accent:#8B6FF0; --cu-accent2:#4DB8FF; --cu-line:#332C45; }
+  .hero-dark{ position:relative; overflow:hidden; background:radial-gradient(ellipse 90% 70% at 50% 18%,#2A2140 0%,var(--cu-bg) 62%);
+    min-height:88vh; display:flex; flex-direction:column; color:var(--cu-ink); margin:0 0 -1px; }
+  .glow-wrap{ position:absolute; inset:0; pointer-events:none; }
+  .glow{ position:absolute; top:30%; left:50%; width:560px; height:560px; translate:-50% -50%; border-radius:50%;
+    filter:blur(64px) hue-rotate(0deg); background:radial-gradient(circle,rgba(139,111,240,.62) 0%,rgba(77,184,255,.26) 45%,transparent 72%);
+    animation:cuGlowBreathe 5s ease-in-out infinite, cuGlowHue 9s ease-in-out infinite; }
+  .glow.g2{ width:320px; height:320px; translate:calc(-50% + 90px) calc(-50% - 40px); opacity:.6;
+    background:radial-gradient(circle,rgba(77,184,255,.5) 0%,transparent 70%); animation-delay:-2.5s; }
+  @keyframes cuGlowBreathe{ 0%,100%{ transform:translate(-50%,-50%) scale(1); opacity:.85; } 50%{ transform:translate(-50%,-50%) scale(1.2); opacity:1; } }
+  @keyframes cuGlowHue{ 0%,100%{ filter:blur(64px) hue-rotate(0deg); } 50%{ filter:blur(64px) hue-rotate(24deg); } }
+  .arc-wrap{ position:absolute; top:5%; left:50%; translate:-50% 0; pointer-events:none; }
+  .arc-wrap path{ stroke-dasharray:900; stroke-dashoffset:900; animation:cuDrawArc 2.2s cubic-bezier(.2,.7,.3,1) .3s forwards; }
+  @keyframes cuDrawArc{ to{ stroke-dashoffset:0; } }
+  .ripples-wrap{ position:absolute; top:52%; left:50%; translate:-50% -50%; pointer-events:none; }
+  .ripples-wrap span{ position:absolute; top:0; left:0; width:110px; height:34px; margin:-17px 0 0 -55px; border-radius:50%;
+    border:1px solid var(--cu-accent); opacity:0; animation:cuRingPing 3.4s cubic-bezier(.15,.6,.3,1) infinite; }
+  .ripples-wrap span:nth-child(2){ animation-delay:.85s; border-color:var(--cu-accent); }
+  .ripples-wrap span:nth-child(3){ animation-delay:1.7s; border-color:var(--cu-accent2); }
+  .ripples-wrap span:nth-child(4){ animation-delay:2.55s; border-color:var(--cu-accent2); }
+  @keyframes cuRingPing{ 0%{ transform:scale(.5); opacity:.9; } 75%{ opacity:.18; } 100%{ transform:scale(6.2); opacity:0; } }
+  .stack-wrap{ position:absolute; left:50%; top:29%; translate:-50% -50%; z-index:2; pointer-events:none; }
+  .cu-stack{ position:relative; width:150px; animation:cuStackFloat 4.2s ease-in-out infinite; }
+  @keyframes cuStackFloat{ 0%,100%{ transform:translateY(0) rotate(-4deg); } 50%{ transform:translateY(-16px) rotate(-1deg); } }
+  .cu-stack .card{ position:absolute; inset:0; aspect-ratio:4/5; border-radius:14px; box-shadow:0 30px 70px rgba(0,0,0,.55); }
+  .cu-stack .card.c3{ background:linear-gradient(155deg,#3A2E5C,#241C3B); transform:rotate(9deg) translate(10px,6px); opacity:.55; }
+  .cu-stack .card.c2{ background:linear-gradient(155deg,#5A46A8,#2E2350); transform:rotate(3deg) translate(4px,2px); opacity:.8; }
+  .cu-stack .card.c1{ background:linear-gradient(155deg,#8B6FF0,#4B2FBE); position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .cu-stack .card.c1::before{ content:""; width:34px; height:34px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.9),rgba(255,255,255,.15) 70%); }
+  .cu-stack .card.c1::after{ content:""; position:absolute; left:14px; right:14px; bottom:16px; height:2px; background:rgba(255,255,255,.5); box-shadow:0 8px 0 rgba(255,255,255,.28); }
+  .cu-stack .shine{ position:absolute; inset:-40%; background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%); animation:cuShine 3.6s ease-in-out infinite; }
+  @keyframes cuShine{ 0%{ transform:translateX(-60%); } 100%{ transform:translateX(60%); } }
+  .hero-dark-body{ position:relative; z-index:3; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    text-align:center; padding:0 24px 64px; max-width:640px; margin:0 auto; }
+  .hero-dark-body .kicker{ font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--cu-accent2);
+    margin-bottom:22px; opacity:0; animation:cuRiseIn .7s ease .1s forwards; }
+  .hero-dark-body h1{ font-family:var(--serif); font-weight:340; font-size:clamp(34px,5.2vw,54px); line-height:1.08; margin:0 0 18px;
+    letter-spacing:-0.01em; text-wrap:balance; opacity:0; animation:cuRiseIn .8s ease .28s forwards; }
+  .hero-dark-body h1 em{ font-style:italic; color:var(--cu-accent); }
+  .hero-dark-body p{ font-size:16px; color:var(--cu-muted); margin:0 0 30px; max-width:44ch; line-height:1.6;
+    opacity:0; animation:cuRiseIn .8s ease .44s forwards; }
+  .hero-dark-body .btn-dark{ opacity:0; animation:cuRiseIn .8s ease .58s forwards; }
+  @keyframes cuRiseIn{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:translateY(0); } }
+  .btn-dark{ position:relative; display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:600; font-size:13px;
+    letter-spacing:.06em; text-transform:uppercase; text-decoration:none; background:var(--cu-accent); color:#0F0D17; padding:16px 28px;
+    overflow:hidden; transition:transform .2s ease; }
+  .btn-dark:hover{ transform:translateY(-2px); }
+  .btn-dark::after{ content:"\2192"; }
+  .btn-dark::before{ content:""; position:absolute; inset:0; transform:translateX(-120%);
+    background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%); }
+  .btn-dark:hover::before{ animation:cuBtnShine 1s ease; }
+  @keyframes cuBtnShine{ to{ transform:translateX(120%); } }
+  @media (max-width:860px){ .hero-dark-body h1{ font-size:32px; } .stack-wrap{ transform:translate(-50%,-50%) scale(.8); } }
+  @media (prefers-reduced-motion: reduce){
+    .glow, .ripples-wrap span, .cu-stack, .cu-stack .shine, .arc-wrap path{ animation:none !important; }
+    .hero-dark-body *{ opacity:1 !important; transform:none !important; }
+  }
+</style>
 
 <nav class="land-nav">
   <span class="id"><span class="verified-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>@creatorup_</span>
 </nav>
 
-<header class="hero" style="grid-template-columns:1fr;">
-  <div>
+<header class="hero-dark" data-scene-root>
+  <div class="glow-wrap" data-parallax data-range="70"><div class="glow"></div><div class="glow g2"></div></div>
+  <div class="arc-wrap" data-parallax data-range="45">
+    <svg width="640" height="220" viewBox="0 0 640 220" fill="none"><path d="M20 220 C 20 90, 620 90, 620 220" stroke="#8B6FF0" stroke-width="1.5" opacity="0.6"/></svg>
+  </div>
+  <div class="ripples-wrap" data-parallax data-range="100"><span></span><span></span><span></span><span></span></div>
+  <div class="stack-wrap" data-parallax data-range="36">
+    <div class="cu-stack">
+      <div class="card c3"></div>
+      <div class="card c2"></div>
+      <div class="card c1"><div class="shine"></div></div>
+    </div>
+  </div>
+  <div class="hero-dark-body">
     <div class="kicker">Coleção Creator Pro</div>
-    <h1>Seis guias.<br />Seis problemas reais<br />de quem <em>cria</em>.</h1>
-    <p class="sub">Escolha o seu — cada um resolve uma coisa específica, não é conteúdo genérico de "dicas".</p>
+    <h1>Seis guias.<br /><em>Seis problemas reais</em> de quem cria.</h1>
+    <p>Escolha o seu, cada um resolve uma coisa específica, não é conteúdo genérico de dicas.</p>
+    <a class="btn-dark" href="#picker">Ver os 6 guias</a>
   </div>
 </header>
 
-<section class="section-editorial">
+<section class="section-editorial" id="picker">
   <div class="section-inner">
     <div class="eyebrow">Escolha seu guia</div>
     <h2>Qual desses é o seu problema agora?</h2>
@@ -249,7 +322,7 @@ a { color: var(--accent-ink); }
   <div class="section-inner">
     <div class="eyebrow">Ou leve todos</div>
     <h2>Os seis juntos, por R$ 97.</h2>
-    <p class="body-muted">Comprados separados, os seis somam R$ 156. Na coleção saem por R$ 97, uma economia de R$ 59 — e você resolve os seis problemas de uma vez, não um por mês.</p>
+    <p class="body-muted">Comprados separados, os seis somam R$ 156. Na coleção saem por R$ 97, uma economia de R$ 59, e você resolve os seis problemas de uma vez, não um por mês.</p>
     <div class="price-row" style="grid-template-columns:1fr;margin-top:26px;">
       <div class="price-cell on">
         <div class="pn">Coleção Creator Pro</div>
@@ -261,6 +334,34 @@ a { color: var(--accent-ink); }
     <p class="body-muted" style="text-align:center;font-size:13px;margin-top:20px;">Pagamento processado pela Kiwify. Acesso liberado por e-mail logo após a confirmação.</p>
   </div>
 </section>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  var mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', function (e) {
+    mouseX = (e.clientX / window.innerWidth) - 0.5;
+    mouseY = (e.clientY / window.innerHeight) - 0.5;
+  }, { passive: true });
+  var layers = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
+  if (!layers.length) return;
+  function frame() {
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    layers.forEach(function (el) {
+      var host = el.closest('[data-scene-root]') || el.parentElement;
+      var rect = host.getBoundingClientRect();
+      var progress = 1 - (rect.top + rect.height) / (vh + rect.height);
+      progress = Math.max(0, Math.min(1, progress));
+      var range = parseFloat(el.dataset.range || '40');
+      var y = (progress - 0.5) * range;
+      el.style.transform = 'translate3d(' + (mouseX * 8).toFixed(1) + 'px,' + (y + mouseY * 6).toFixed(1) + 'px,0)';
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 
 </body>
 </html>
