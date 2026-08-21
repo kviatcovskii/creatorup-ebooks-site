@@ -116,6 +116,26 @@ a { color: var(--accent-ink); }
 .course-hook .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
 .course-hook p { margin: 8px 0 0; font-size: 14px; }
 
+/* landing-page callout box (fixes a latent bug: .bonus-box was used across several landing pages
+   with no CSS rule anywhere, always rendered unstyled, found 2026-08-21) */
+.bonus-box { background: var(--paper-raised); border: 1px solid var(--gold); border-left: 3px solid var(--gold);
+  padding: 22px 26px; margin: 28px 0 0; }
+.bonus-box h3 { font-family: var(--sans); font-weight: 700; font-size: 13px; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--gold); margin: 0 0 10px; }
+.bonus-box p { font-size: 14px; color: var(--ink); margin: 0; max-width: 62ch; }
+.bonus-box ul { margin: 0; padding-left: 18px; }
+.bonus-box li { font-size: 14px; color: var(--ink); margin: 4px 0; }
+
+/* landing-page FAQ accordion (objection handling, added 2026-08-21) */
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-item:first-child { border-top: 1px solid var(--line); }
+.faq-item summary { cursor: pointer; padding: 20px 0; font-family: var(--sans); font-weight: 700; font-size: 15.5px;
+  color: var(--ink); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; color: var(--accent-ink); font-family: var(--mono); font-size: 18px; flex-shrink: 0; }
+.faq-item[open] summary::after { content: "\2212"; }
+.faq-item p { font-size: 14px; color: var(--muted); margin: 0 0 22px; max-width: 60ch; line-height: 1.6; }
+
 .sheet-footer { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px;
   letter-spacing: .06em; color: var(--muted); text-transform: uppercase; margin-top: 52px; padding-top: 14px; border-top: 1px solid var(--line); }
 
@@ -211,6 +231,9 @@ a { color: var(--accent-ink); }
 @keyframes hdPanelFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .hero-dark .growth-panel .bar { animation: hdBarGrow .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 60ms + .6s); }
 @keyframes hdBarGrow { from { transform: scaleY(0); transform-origin: bottom; } to { transform: scaleY(1); transform-origin: bottom; } }
+.hero-dark .viewfinder { position: relative; z-index: 2; opacity: 0; animation: hdPanelIn .8s ease .3s forwards, hdPanelFloat 5s ease-in-out .8s infinite; }
+.hero-dark .viewfinder .rec .dot { animation: hdDotPulse 1.4s ease-in-out infinite; }
+@keyframes hdDotPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(.7); } }
 .hero-dark-centered { min-height: 88vh; display: flex; flex-direction: column; padding: 0; }
 .hero-dark-centered .hd-body { position: relative; z-index: 3; flex: 1; display: flex; flex-direction: column; align-items: center;
   justify-content: flex-end; text-align: center; padding: 0 24px 64px; max-width: 640px; margin: 0 auto; }
@@ -220,6 +243,7 @@ a { color: var(--accent-ink); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-dark .hd-glow, .hero-dark .hd-ripples-wrap span, .hero-dark .hd-arc path, .hero-dark .growth-panel, .hero-dark .growth-panel .bar,
+  .hero-dark .viewfinder, .hero-dark .viewfinder .rec .dot,
   .hero-dark .kicker, .hero-dark h1, .hero-dark .sub, .hero-dark .meter-row, .hero-dark .btn { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
 
@@ -361,6 +385,23 @@ a { color: var(--accent-ink); }
   </div>
 </section>
 
+<section class="section-editorial">
+  <div class="section-inner" style="max-width:720px;">
+    <div class="eyebrow">Perguntas antes de comprar</div>
+    <h2>O que quem já pensou nisso quer saber.</h2>
+    <details class="faq-item" open><summary>Preciso saber programar?</summary>
+    <p>Não. 0 linhas de código pra começar, o guia ensina a configurar tudo via conversa com o
+    Claude, sem abrir editor de código nenhum.</p></details>
+    <details class="faq-item"><summary>Preciso deixar o computador ligado o tempo todo?</summary>
+    <p>Não. O Capítulo 6 ensina a rodar via agente na nuvem, que publica mesmo com seu computador
+    desligado.</p></details>
+    <details class="faq-item"><summary>Como recebo o guia?</summary>
+    <p>PDF liberado por e-mail assim que a Kiwify confirma o pagamento, sem espera.</p></details>
+    <details class="faq-item"><summary>É assinatura?</summary>
+    <p>Não. Pagamento único, o PDF é seu pra sempre, sem cobrança recorrente.</p></details>
+  </div>
+</section>
+
 <section class="section-editorial" id="preco">
   <div class="section-inner">
     <div class="eyebrow">Investimento</div>
@@ -379,7 +420,7 @@ a { color: var(--accent-ink); }
         <a class="btn" href="https://pay.kiwify.com.br/1badqiY" target="_blank" rel="noopener">Quero a coleção completa</a>
       </div>
     </div>
-    <p class="body-muted" style="text-align:center;font-size:13px;margin-top:20px;">Pagamento processado pela Kiwify. Acesso liberado por e-mail logo após a confirmação.</p>
+    <p class="body-muted" style="text-align:center;font-size:13px;margin-top:20px;">Pagamento processado pela Kiwify. Acesso liberado por e-mail logo após a confirmação. Direito de arrependimento de 7 dias garantido por lei (Art. 49 do CDC) pra qualquer compra online.</p>
   </div>
 </section>
 
