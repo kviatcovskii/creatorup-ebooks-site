@@ -174,6 +174,55 @@ a { color: var(--accent-ink); }
   border-radius: 50%; background: var(--gold); flex-shrink: 0; }
 .verified-mark svg { width: 9px; height: 9px; }
 
+/* ---- HERO DARK: cinematic moment at the top of a landing page, arc+glow+ripple, brand accent ----
+   deliberate one-time theme switch (see taste-skill 4.11), rest of the page stays in --paper light system */
+.hero-dark { position: relative; overflow: hidden; background: radial-gradient(ellipse 90% 70% at 50% 18%, #322C45 0%, #100E17 62%);
+  color: #EDEAF5; margin: 0 0 -1px; }
+.hero-dark .hd-glow-wrap { position: absolute; inset: 0; pointer-events: none; }
+.hero-dark .hd-glow { position: absolute; top: 30%; left: 50%; width: 520px; height: 520px; translate: -50% -50%; border-radius: 50%;
+  filter: blur(60px) hue-rotate(0deg); background: radial-gradient(circle, #8B6FF0 0%, #4DB8FF 45%, transparent 72%);
+  opacity: .55; animation: hdGlowBreathe 5s ease-in-out infinite, hdGlowHue 9s ease-in-out infinite; }
+.hero-dark .hd-glow.g2 { width: 300px; height: 300px; translate: calc(-50% + 80px) calc(-50% - 30px); opacity: .3; animation-delay: -2.5s; }
+@keyframes hdGlowBreathe { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: .55; } 50% { transform: translate(-50%,-50%) scale(1.18); opacity: .8; } }
+@keyframes hdGlowHue { 0%,100% { filter: blur(60px) hue-rotate(0deg); } 50% { filter: blur(60px) hue-rotate(18deg); } }
+.hero-dark .hd-ripples-wrap { position: absolute; pointer-events: none; }
+.hero-dark .hd-ripples-wrap span { position: absolute; top: 0; left: 0; width: 110px; height: 34px; margin: -17px 0 0 -55px;
+  border-radius: 50%; border: 1px solid #8B6FF0; opacity: 0; animation: hdRingPing 3.4s cubic-bezier(.15,.6,.3,1) infinite; }
+.hero-dark .hd-ripples-wrap span:nth-child(2) { animation-delay: .9s; }
+.hero-dark .hd-ripples-wrap span:nth-child(3) { animation-delay: 1.8s; border-color: #4DB8FF; }
+@keyframes hdRingPing { 0% { transform: scale(.5); opacity: .75; } 75% { opacity: .12; } 100% { transform: scale(5.2); opacity: 0; } }
+.hero-dark .hd-arc { position: absolute; top: 4%; left: 50%; translate: -50% 0; pointer-events: none; }
+.hero-dark .hd-arc path { stroke-dasharray: 900; stroke-dashoffset: 900; animation: hdDrawArc 2.2s cubic-bezier(.2,.7,.3,1) .3s forwards; }
+@keyframes hdDrawArc { to { stroke-dashoffset: 0; } }
+.hero-dark .kicker { color: #4DB8FF; opacity: 0; animation: hdRiseIn .7s ease .1s forwards; }
+.hero-dark h1 { color: #EDEAF5; opacity: 0; animation: hdRiseIn .8s ease .26s forwards; }
+.hero-dark h1 em { color: #8B6FF0; }
+.hero-dark .sub { color: #A79FC2; opacity: 0; animation: hdRiseIn .8s ease .42s forwards; }
+.hero-dark .meter-row { color: #A79FC2; opacity: 0; animation: hdRiseIn .8s ease .58s forwards; }
+.hero-dark .btn { position: relative; overflow: hidden; background: #8B6FF0; color: #100E17; opacity: 0; animation: hdRiseIn .8s ease .5s forwards; }
+.hero-dark .btn::before { content: ""; position: absolute; inset: 0; transform: translateX(-120%);
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.5) 50%, transparent 70%); }
+.hero-dark .btn:hover::before { animation: hdBtnShine 1s ease; }
+@keyframes hdBtnShine { to { transform: translateX(120%); } }
+@keyframes hdRiseIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.hero-dark .growth-panel { position: relative; z-index: 2; background: linear-gradient(175deg, #1A1726 0%, #100E17 100%);
+  animation: hdPanelFloat 5s ease-in-out infinite; opacity: 0; animation: hdPanelIn .8s ease .3s forwards, hdPanelFloat 5s ease-in-out .8s infinite; }
+@keyframes hdPanelIn { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes hdPanelFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.hero-dark .growth-panel .bar { animation: hdBarGrow .9s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 60ms + .6s); }
+@keyframes hdBarGrow { from { transform: scaleY(0); transform-origin: bottom; } to { transform: scaleY(1); transform-origin: bottom; } }
+.hero-dark-centered { min-height: 88vh; display: flex; flex-direction: column; padding: 0; }
+.hero-dark-centered .hd-body { position: relative; z-index: 3; flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-end; text-align: center; padding: 0 24px 64px; max-width: 640px; margin: 0 auto; }
+.hero-dark-centered .hd-body p { max-width: 44ch; margin: 0 auto 30px; }
+@media (max-width: 880px) {
+  .hero-dark { padding: 20px 24px 56px; grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-dark .hd-glow, .hero-dark .hd-ripples-wrap span, .hero-dark .hd-arc path, .hero-dark .growth-panel, .hero-dark .growth-panel .bar,
+  .hero-dark .kicker, .hero-dark h1, .hero-dark .sub, .hero-dark .meter-row, .hero-dark .btn { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+
 .section-editorial { padding: 78px 56px; border-top: 1px solid var(--line); }
 .section-inner { max-width: 980px; margin: 0 auto; }
 .section-editorial .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
@@ -223,13 +272,15 @@ a { color: var(--accent-ink); }
   <a class="cta-mini" href="#preco">Comprar</a>
 </nav>
 
-<header class="hero">
+<header class="hero hero-dark" data-scene-root>
+  <div class="hd-glow-wrap" data-parallax data-range="26"><div class="hd-glow"></div><div class="hd-glow g2"></div></div>
+  <div class="hd-ripples-wrap" data-parallax data-range="40" style="top:62%;left:78%;"><span></span><span></span><span></span></div>
   <div>
     <div class="kicker">Coleção Creator Pro</div>
     <h1>Publi é só uma<br />das <em>quinze</em> formas<br />de ganhar dinheiro.</h1>
     <p class="sub">O mapa completo de monetização pra creator: UGC, afiliados, contrato
-    recorrente, produto digital, comunidade e mais — com quanto cobrar em cada um.</p>
-    <a class="btn" href="https://pay.kiwify.com.br/CJBmxSa" target="_blank" rel="noopener">Quero o meu guia agora</a>
+    recorrente, produto digital, comunidade e mais, com quanto cobrar em cada um.</p>
+    <a class="btn" href="https://pay.kiwify.com.br/CJBmxSa" target="_blank" rel="noopener">Quero meu guia agora</a>
     <div class="meter-row" style="margin-top:22px;">
       <span>PDF na hora</span><span>30 páginas + bônus</span><span>Tabela de preços</span>
     </div>
@@ -238,14 +289,14 @@ a { color: var(--accent-ink); }
     <div class="c2"></div>
     <div class="handle"><span class="mk"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>@creatorup_</div>
     <div class="bars">
-      <div class="bar" style="height:60%"></div>
-      <div class="bar" style="height:35%"></div>
-      <div class="bar" style="height:48%"></div>
-      <div class="bar" style="height:30%"></div>
-      <div class="bar" style="height:55%"></div>
-      <div class="bar" style="height:42%"></div>
-      <div class="bar" style="height:66%"></div>
-      <div class="bar" style="height:100%"></div>
+      <div class="bar" style="height:60%;--i:0"></div>
+      <div class="bar" style="height:35%;--i:1"></div>
+      <div class="bar" style="height:48%;--i:2"></div>
+      <div class="bar" style="height:30%;--i:3"></div>
+      <div class="bar" style="height:55%;--i:4"></div>
+      <div class="bar" style="height:42%;--i:5"></div>
+      <div class="bar" style="height:66%;--i:6"></div>
+      <div class="bar" style="height:100%;--i:7"></div>
     </div>
     <div class="delta"><span class="from">1 fonte de renda</span><span class="to">15 formas mapeadas</span></div>
   </div>
@@ -260,7 +311,7 @@ a { color: var(--accent-ink); }
       <div class="stat-cell"><span class="v">4%</span><span class="l">dos criadores no mundo ganham mais de US$100 mil/ano</span></div>
       <div class="stat-cell"><span class="v">15</span><span class="l">formas de monetização mapeadas neste guia</span></div>
     </div>
-    <p class="center" style="margin-top:32px;"><a class="btn" href="https://pay.kiwify.com.br/CJBmxSa" target="_blank" rel="noopener">Quero resolver isso agora</a></p>
+    <p class="center" style="margin-top:32px;"><a class="btn" href="https://pay.kiwify.com.br/CJBmxSa" target="_blank" rel="noopener">Quero meu guia agora</a></p>
   </div>
 </section>
 
@@ -293,7 +344,7 @@ a { color: var(--accent-ink); }
       <li><span class="tc-sm">07</span><div><div class="t">Quanto cobrar em cada modelo</div>
       <div class="d">Tabela de referência completa por formato.</div></div></li>
       <li><span class="tc-sm">11</span><div><div class="t">Bônus: a 16ª forma, clip campaigns</div>
-      <div class="d">Marca fornece o material, você edita e recebe por clipe — sem produto, sem afiliado.</div></div></li>
+      <div class="d">Marca fornece o material, você edita e recebe por clipe, sem produto, sem afiliado.</div></div></li>
     </ul>
     <p class="body-muted" style="margin-top:14px;">E mais 6 capítulos além destes, mais os bônus abaixo.</p>
     <div class="bonus-box">
@@ -305,7 +356,7 @@ a { color: var(--accent-ink); }
         <li>Capítulo bônus com print real de uma campanha de clip de $150 mil de orçamento</li>
       </ul>
     </div>
-    <p class="center" style="margin-top:32px;"><a class="btn" href="https://pay.kiwify.com.br/CJBmxSa" target="_blank" rel="noopener">Quero o guia completo</a></p>
+    <p class="center" style="margin-top:32px;"><a class="btn" href="https://pay.kiwify.com.br/CJBmxSa" target="_blank" rel="noopener">Quero meu guia agora</a></p>
   </div>
 </section>
 
@@ -330,6 +381,34 @@ a { color: var(--accent-ink); }
     <p class="body-muted" style="text-align:center;font-size:13px;margin-top:20px;">Pagamento processado pela Kiwify. Acesso liberado por e-mail logo após a confirmação.</p>
   </div>
 </section>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  var mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', function (e) {
+    mouseX = (e.clientX / window.innerWidth) - 0.5;
+    mouseY = (e.clientY / window.innerHeight) - 0.5;
+  }, { passive: true });
+  var layers = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
+  if (!layers.length) return;
+  function frame() {
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    layers.forEach(function (el) {
+      var host = el.closest('[data-scene-root]') || el.parentElement;
+      var rect = host.getBoundingClientRect();
+      var progress = 1 - (rect.top + rect.height) / (vh + rect.height);
+      progress = Math.max(0, Math.min(1, progress));
+      var range = parseFloat(el.dataset.range || '40');
+      var y = (progress - 0.5) * range;
+      el.style.transform = 'translate3d(' + (mouseX * 8).toFixed(1) + 'px,' + (y + mouseY * 6).toFixed(1) + 'px,0)';
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 
 </body>
 </html>
