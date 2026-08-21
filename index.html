@@ -292,46 +292,29 @@ a { color: var(--accent-ink); }
 <title>Coleção Creator Pro, Creator Up</title>
 
 <style>
-  /* hub-only: floating card stack (product pages use .growth-panel instead, shared in system.css.html) */
-  .hd-stack-wrap { position: absolute; left: 50%; top: 29%; translate: -50% -50%; z-index: 2; pointer-events: none; }
-  .hd-stack { position: relative; width: 150px; opacity: 0; animation: hdStackIn .8s ease .3s forwards, hdStackFloat 4.2s ease-in-out .8s infinite; }
-  @keyframes hdStackIn { from { opacity: 0; transform: translateY(18px) rotate(-4deg); } to { opacity: 1; transform: translateY(0) rotate(-4deg); } }
-  @keyframes hdStackFloat { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-16px) rotate(-1deg); } }
-  .hd-stack .card { position: absolute; inset: 0; aspect-ratio: 4/5; border-radius: 14px; box-shadow: 0 30px 70px rgba(0,0,0,.55); }
-  .hd-stack .card.c3 { background: linear-gradient(155deg, var(--line), var(--paper)); transform: rotate(9deg) translate(10px,6px); opacity: .55; }
-  .hd-stack .card.c2 { background: linear-gradient(155deg, var(--accent-ink), var(--paper-raised)); transform: rotate(3deg) translate(4px,2px); opacity: .8; }
-  .hd-stack .card.c1 { background: linear-gradient(155deg, var(--accent), var(--accent-ink)); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .hd-stack .card.c1::before { content: ""; width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.9), rgba(255,255,255,.15) 70%); }
-  .hd-stack .card.c1::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 16px; height: 2px; background: rgba(255,255,255,.5); box-shadow: 0 8px 0 rgba(255,255,255,.28); }
-  .hd-stack .shine { position: absolute; inset: -40%; background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.35) 50%, transparent 60%); animation: hdShine 3.6s ease-in-out infinite; }
-  @keyframes hdShine { 0% { transform: translateX(-60%); } 100% { transform: translateX(60%); } }
-  @media (max-width: 860px) { .hd-stack-wrap { transform: translate(-50%,-50%) scale(.8); } }
-  @media (prefers-reduced-motion: reduce) { .hd-stack, .hd-stack .shine { animation: none !important; opacity: 1 !important; } }
+  /* hub-only: 3D card + dollar-sign object (Three.js), product pages keep .growth-panel instead */
+  .hd-canvas-wrap { position: relative; height: 420px; }
+  .hd-canvas-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  @media (max-width: 860px) { .hd-canvas-wrap { height: 300px; } }
 </style>
 
 <nav class="land-nav">
   <span class="id"><span class="verified-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>@creatorup_</span>
 </nav>
 
-<header class="hero hero-dark hero-dark-centered" data-scene-root>
+<header class="hero hero-dark" data-scene-root>
   <div class="hd-glow-wrap" data-parallax data-range="70"><div class="hd-glow"></div><div class="hd-glow g2"></div></div>
   <div class="hd-arc" data-parallax data-range="45">
     <svg width="640" height="220" viewBox="0 0 640 220" fill="none"><path d="M20 220 C 20 90, 620 90, 620 220" style="stroke:var(--gold)" stroke-width="1.5" opacity="0.6"/></svg>
   </div>
-  <div class="hd-ripples-wrap" data-parallax data-range="100" style="top:52%;left:50%;translate:-50% -50%;"><span></span><span></span><span></span></div>
-  <div class="hd-stack-wrap" data-parallax data-range="36">
-    <div class="hd-stack">
-      <div class="card c3"></div>
-      <div class="card c2"></div>
-      <div class="card c1"><div class="shine"></div></div>
-    </div>
-  </div>
-  <div class="hd-body">
+  <div class="hd-ripples-wrap" data-parallax data-range="60" style="top:55%;left:78%;"><span></span><span></span><span></span></div>
+  <div>
     <div class="kicker">Coleção Creator Pro</div>
     <h1>Seis guias.<br /><em>Seis problemas reais</em> de quem cria.</h1>
     <p class="sub">Escolha o seu, cada um resolve uma coisa específica, não é conteúdo genérico de dicas.</p>
     <a class="btn" href="#picker">Ver os 6 guias</a>
   </div>
+  <div class="hd-canvas-wrap"><canvas id="cardCanvas"></canvas></div>
 </header>
 
 <section class="section-editorial" id="picker">
@@ -391,6 +374,170 @@ a { color: var(--accent-ink); }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+</script>
+
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script>
+(function () {
+  if (!window.THREE) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wrap = document.querySelector('.hd-canvas-wrap');
+  var canvas = document.getElementById('cardCanvas');
+  if (!wrap || !canvas) return;
+
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+  camera.position.set(0, 0, 8);
+
+  var colorA = new THREE.Color(0x8B6FF0);
+  var colorB = new THREE.Color(0x4B2FBE);
+  var colorChip = new THREE.Color(0xF2ECE1);
+  var colorDollar = new THREE.Color(0x4DB8FF);
+
+  function roundedRectSDF(x, y, w, h, r) {
+    var qx = Math.abs(x) - (w / 2 - r);
+    var qy = Math.abs(y) - (h / 2 - r);
+    var ox = Math.max(qx, 0), oy = Math.max(qy, 0);
+    return Math.sqrt(ox * ox + oy * oy) + Math.min(Math.max(qx, qy), 0) - r;
+  }
+
+  var pointList = [];
+  var CARD_W = 3.4, CARD_H = 2.14, CARD_R = 0.16;
+  var CARD_GRID_X = reduce ? 0 : 190, CARD_GRID_Y = 120;
+  var CHIP_X0 = -CARD_W / 2 + 0.42, CHIP_Y0 = 0.28, CHIP_W = 0.62, CHIP_H = 0.46, CHIP_R = 0.07;
+  for (var gx = 0; gx < CARD_GRID_X; gx++) {
+    for (var gy = 0; gy < CARD_GRID_Y; gy++) {
+      var u = gx / (CARD_GRID_X - 1) - 0.5;
+      var v = gy / (CARD_GRID_Y - 1) - 0.5;
+      var x = u * CARD_W + (Math.random() - 0.5) * 0.01;
+      var y = v * CARD_H + (Math.random() - 0.5) * 0.01;
+      if (roundedRectSDF(x, y, CARD_W, CARD_H, CARD_R) > 0) continue;
+      var z = (Math.random() - 0.5) * 0.04;
+      var isChip = roundedRectSDF(x - CHIP_X0, y - CHIP_Y0, CHIP_W, CHIP_H, CHIP_R) < 0;
+      var c;
+      if (isChip) {
+        c = colorChip.clone();
+      } else {
+        var sheen = (x / CARD_W + y / CARD_H + 1) / 2;
+        c = colorA.clone().lerp(colorB, Math.max(0, Math.min(1, sheen)));
+      }
+      pointList.push({ x: x, y: y, z: z, r: c.r, g: c.g, b: c.b });
+    }
+  }
+
+  if (!reduce) {
+    var glyphCanvas = document.createElement('canvas');
+    glyphCanvas.width = 256; glyphCanvas.height = 256;
+    var gctx = glyphCanvas.getContext('2d');
+    gctx.clearRect(0, 0, 256, 256);
+    gctx.fillStyle = '#fff';
+    gctx.font = '900 190px Arial';
+    gctx.textAlign = 'center';
+    gctx.textBaseline = 'middle';
+    gctx.fillText('$', 128, 136);
+    var gdata = gctx.getImageData(0, 0, 256, 256).data;
+    var DOLLAR_SCALE = 1.15, DOLLAR_STEP = 2;
+    var dollarOffsetX = CARD_W / 2 - 0.15, dollarOffsetY = CARD_H / 2 + 0.35;
+    for (var py = 0; py < 256; py += DOLLAR_STEP) {
+      for (var px = 0; px < 256; px += DOLLAR_STEP) {
+        var alpha = gdata[(py * 256 + px) * 4 + 3];
+        if (alpha < 140) continue;
+        var nx = (px - 128) / 256 * DOLLAR_SCALE;
+        var ny = -(py - 128) / 256 * DOLLAR_SCALE;
+        var jz = (Math.random() - 0.5) * 0.06;
+        pointList.push({
+          x: nx + dollarOffsetX, y: ny + dollarOffsetY, z: jz + 0.35,
+          r: colorDollar.r, g: colorDollar.g, b: colorDollar.b
+        });
+      }
+    }
+  }
+
+  var COUNT = pointList.length;
+  var positions = new Float32Array(COUNT * 3);
+  var basePositions = new Float32Array(COUNT * 3);
+  var colors = new Float32Array(COUNT * 3);
+  for (var pi = 0; pi < COUNT; pi++) {
+    var p = pointList[pi];
+    var idx = pi * 3;
+    positions[idx] = p.x; positions[idx + 1] = p.y; positions[idx + 2] = p.z;
+    basePositions[idx] = p.x; basePositions[idx + 1] = p.y; basePositions[idx + 2] = p.z;
+    colors[idx] = p.r; colors[idx + 1] = p.g; colors[idx + 2] = p.b;
+  }
+  var particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  var particleMat = new THREE.PointsMaterial({ size: 0.024, vertexColors: true, transparent: true, opacity: 0.92, blending: THREE.AdditiveBlending, depthWrite: false });
+  var points = new THREE.Points(particleGeo, particleMat);
+  scene.add(points);
+
+  var velocities = new Float32Array(COUNT * 3);
+  var mouse = new THREE.Vector2(9999, 9999);
+  var raycaster = new THREE.Raycaster();
+  var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  var mouseWorld = new THREE.Vector3();
+
+  function resize() {
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  wrap.addEventListener('pointermove', function (e) {
+    var rect = wrap.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  });
+  wrap.addEventListener('pointerleave', function () { mouse.set(9999, 9999); });
+
+  var clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    var t = clock.getElapsedTime();
+    points.rotation.y = Math.sin(t * 0.15) * 0.18 + 0.06;
+    points.rotation.x = Math.sin(t * 0.11) * 0.08;
+    points.position.y = Math.sin(t * 0.5) * 0.12;
+
+    if (mouse.x < 100) {
+      raycaster.setFromCamera(mouse, camera);
+      raycaster.ray.intersectPlane(planeZ.set(new THREE.Vector3(0, 0, 1), -points.position.z), mouseWorld) || mouseWorld.set(9999, 9999, 9999);
+      var localMouse = points.worldToLocal(mouseWorld.clone());
+      var pos = particleGeo.attributes.position.array;
+      for (var j = 0; j < COUNT; j++) {
+        var idx2 = j * 3;
+        var dx = pos[idx2] - localMouse.x;
+        var dy = pos[idx2 + 1] - localMouse.y;
+        var dz = pos[idx2 + 2] - localMouse.z;
+        var distSq = dx * dx + dy * dy + dz * dz;
+        if (distSq < 1.1) {
+          var dist = Math.sqrt(distSq) || 0.001;
+          var force = (1.05 - dist) / 1.05 * 0.03;
+          velocities[idx2] += (dx / dist) * force;
+          velocities[idx2 + 1] += (dy / dist) * force;
+          velocities[idx2 + 2] += (dz / dist) * force;
+        }
+      }
+    }
+    var pos2 = particleGeo.attributes.position.array;
+    for (var k = 0; k < COUNT; k++) {
+      var idx3 = k * 3;
+      velocities[idx3] *= 0.92; velocities[idx3 + 1] *= 0.92; velocities[idx3 + 2] *= 0.92;
+      pos2[idx3] += velocities[idx3] + (basePositions[idx3] - pos2[idx3]) * 0.03;
+      pos2[idx3 + 1] += velocities[idx3 + 1] + (basePositions[idx3 + 1] - pos2[idx3 + 1]) * 0.03;
+      pos2[idx3 + 2] += velocities[idx3 + 2] + (basePositions[idx3 + 2] - pos2[idx3 + 2]) * 0.03;
+    }
+    particleGeo.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
+  }
+  if (!reduce) { animate(); } else { renderer.render(scene, camera); }
 })();
 </script>
 
