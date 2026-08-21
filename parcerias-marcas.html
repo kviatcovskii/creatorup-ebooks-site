@@ -234,6 +234,11 @@ a { color: var(--accent-ink); }
 .hero-dark .viewfinder { position: relative; z-index: 2; opacity: 0; animation: hdPanelIn .8s ease .3s forwards, hdPanelFloat 5s ease-in-out .8s infinite; }
 .hero-dark .viewfinder .rec .dot { animation: hdDotPulse 1.4s ease-in-out infinite; }
 @keyframes hdDotPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(.7); } }
+/* 3D particle object (Three.js), used in place of .growth-panel/.viewfinder on some pages */
+.hd-canvas-wrap { position: relative; height: 480px; }
+.hd-canvas-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+@media (max-width: 860px) { .hd-canvas-wrap { height: 320px; } }
+
 .hero-dark-centered { min-height: 88vh; display: flex; flex-direction: column; padding: 0; }
 .hero-dark-centered .hd-body { position: relative; z-index: 3; flex: 1; display: flex; flex-direction: column; align-items: center;
   justify-content: flex-end; text-align: center; padding: 0 24px 64px; max-width: 640px; margin: 0 auto; }
@@ -309,21 +314,7 @@ a { color: var(--accent-ink); }
       <span>PDF na hora</span><span>34 páginas + bônus</span><span>Modelos prontos</span>
     </div>
   </div>
-  <div class="growth-panel corner-frame">
-    <div class="c2"></div>
-    <div class="handle"><span class="mk"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>@creatorup_</div>
-    <div class="bars">
-      <div class="bar" style="height:20%;--i:0"></div>
-      <div class="bar" style="height:35%;--i:1"></div>
-      <div class="bar" style="height:28%;--i:2"></div>
-      <div class="bar" style="height:48%;--i:3"></div>
-      <div class="bar" style="height:62%;--i:4"></div>
-      <div class="bar" style="height:58%;--i:5"></div>
-      <div class="bar" style="height:82%;--i:6"></div>
-      <div class="bar" style="height:100%;--i:7"></div>
-    </div>
-    <div class="delta"><span class="from">1ª proposta</span><span class="to">contrato recorrente</span></div>
-  </div>
+  <div class="hd-canvas-wrap"><canvas id="cardCanvas"></canvas></div>
 </header>
 
 <section class="section-editorial">
@@ -430,6 +421,170 @@ a { color: var(--accent-ink); }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+</script>
+
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script>
+(function () {
+  if (!window.THREE) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wrap = document.querySelector('.hd-canvas-wrap');
+  var canvas = document.getElementById('cardCanvas');
+  if (!wrap || !canvas) return;
+
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+  camera.position.set(0, 0, 6.4);
+
+  var colorA = new THREE.Color(0x8B6FF0);
+  var colorB = new THREE.Color(0x4B2FBE);
+  var colorChip = new THREE.Color(0xF2ECE1);
+  var colorAccent2 = new THREE.Color(0x4DB8FF);
+
+  function roundedRectSDF(x, y, w, h, r) {
+    var qx = Math.abs(x) - (w / 2 - r);
+    var qy = Math.abs(y) - (h / 2 - r);
+    var ox = Math.max(qx, 0), oy = Math.max(qy, 0);
+    return Math.sqrt(ox * ox + oy * oy) + Math.min(Math.max(qx, qy), 0) - r;
+  }
+
+  var pointList = [];
+  var CARD_W = 4.2, CARD_H = 2.64, CARD_R = 0.2;
+  var CARD_GRID_X = reduce ? 0 : 220, CARD_GRID_Y = 138;
+  var CHIP_X0 = -CARD_W / 2 + 0.5, CHIP_Y0 = 0.34, CHIP_W = 0.72, CHIP_H = 0.54, CHIP_R = 0.08;
+  for (var gx = 0; gx < CARD_GRID_X; gx++) {
+    for (var gy = 0; gy < CARD_GRID_Y; gy++) {
+      var u = gx / (CARD_GRID_X - 1) - 0.5;
+      var v = gy / (CARD_GRID_Y - 1) - 0.5;
+      var x = u * CARD_W + (Math.random() - 0.5) * 0.01;
+      var y = v * CARD_H + (Math.random() - 0.5) * 0.01;
+      if (roundedRectSDF(x, y, CARD_W, CARD_H, CARD_R) > 0) continue;
+      var z = (Math.random() - 0.5) * 0.04;
+      var isChip = roundedRectSDF(x - CHIP_X0, y - CHIP_Y0, CHIP_W, CHIP_H, CHIP_R) < 0;
+      var c;
+      if (isChip) {
+        c = colorChip.clone();
+      } else {
+        var sheen = (x / CARD_W + y / CARD_H + 1) / 2;
+        c = colorA.clone().lerp(colorB, Math.max(0, Math.min(1, sheen)));
+      }
+      pointList.push({ x: x, y: y, z: z, r: c.r, g: c.g, b: c.b });
+    }
+  }
+
+  if (!reduce) {
+    var glyphCanvas = document.createElement('canvas');
+    glyphCanvas.width = 256; glyphCanvas.height = 256;
+    var gctx = glyphCanvas.getContext('2d');
+    gctx.clearRect(0, 0, 256, 256);
+    gctx.fillStyle = '#fff';
+    gctx.font = '900 190px Arial';
+    gctx.textAlign = 'center';
+    gctx.textBaseline = 'middle';
+    gctx.fillText('✓', 128, 136);
+    var gdata = gctx.getImageData(0, 0, 256, 256).data;
+    var GLYPH_SCALE = 1.3, GLYPH_STEP = 2;
+    var glyphOffsetX = CARD_W / 2 - 0.05, glyphOffsetY = CARD_H / 2 + 0.42;
+    for (var py = 0; py < 256; py += GLYPH_STEP) {
+      for (var px = 0; px < 256; px += GLYPH_STEP) {
+        var alpha = gdata[(py * 256 + px) * 4 + 3];
+        if (alpha < 140) continue;
+        var nx = (px - 128) / 256 * GLYPH_SCALE;
+        var ny = -(py - 128) / 256 * GLYPH_SCALE;
+        var jz = (Math.random() - 0.5) * 0.06;
+        pointList.push({
+          x: nx + glyphOffsetX, y: ny + glyphOffsetY, z: jz + 0.35,
+          r: colorAccent2.r, g: colorAccent2.g, b: colorAccent2.b
+        });
+      }
+    }
+  }
+
+  var COUNT = pointList.length;
+  var positions = new Float32Array(COUNT * 3);
+  var basePositions = new Float32Array(COUNT * 3);
+  var colors = new Float32Array(COUNT * 3);
+  for (var pi = 0; pi < COUNT; pi++) {
+    var p = pointList[pi];
+    var idx = pi * 3;
+    positions[idx] = p.x; positions[idx + 1] = p.y; positions[idx + 2] = p.z;
+    basePositions[idx] = p.x; basePositions[idx + 1] = p.y; basePositions[idx + 2] = p.z;
+    colors[idx] = p.r; colors[idx + 1] = p.g; colors[idx + 2] = p.b;
+  }
+  var particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  var particleMat = new THREE.PointsMaterial({ size: 0.024, vertexColors: true, transparent: true, opacity: 0.92, blending: THREE.AdditiveBlending, depthWrite: false });
+  var points = new THREE.Points(particleGeo, particleMat);
+  scene.add(points);
+
+  var velocities = new Float32Array(COUNT * 3);
+  var mouse = new THREE.Vector2(9999, 9999);
+  var raycaster = new THREE.Raycaster();
+  var planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  var mouseWorld = new THREE.Vector3();
+
+  function resize() {
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  wrap.addEventListener('pointermove', function (e) {
+    var rect = wrap.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  });
+  wrap.addEventListener('pointerleave', function () { mouse.set(9999, 9999); });
+
+  var clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    var t = clock.getElapsedTime();
+    points.rotation.y = Math.sin(t * 0.15) * 0.18 + 0.06;
+    points.rotation.x = Math.sin(t * 0.11) * 0.08;
+    points.position.y = Math.sin(t * 0.5) * 0.12;
+
+    if (mouse.x < 100) {
+      raycaster.setFromCamera(mouse, camera);
+      raycaster.ray.intersectPlane(planeZ.set(new THREE.Vector3(0, 0, 1), -points.position.z), mouseWorld) || mouseWorld.set(9999, 9999, 9999);
+      var localMouse = points.worldToLocal(mouseWorld.clone());
+      var pos = particleGeo.attributes.position.array;
+      for (var j = 0; j < COUNT; j++) {
+        var idx2 = j * 3;
+        var dx = pos[idx2] - localMouse.x;
+        var dy = pos[idx2 + 1] - localMouse.y;
+        var dz = pos[idx2 + 2] - localMouse.z;
+        var distSq = dx * dx + dy * dy + dz * dz;
+        if (distSq < 1.1) {
+          var dist = Math.sqrt(distSq) || 0.001;
+          var force = (1.05 - dist) / 1.05 * 0.03;
+          velocities[idx2] += (dx / dist) * force;
+          velocities[idx2 + 1] += (dy / dist) * force;
+          velocities[idx2 + 2] += (dz / dist) * force;
+        }
+      }
+    }
+    var pos2 = particleGeo.attributes.position.array;
+    for (var k = 0; k < COUNT; k++) {
+      var idx3 = k * 3;
+      velocities[idx3] *= 0.92; velocities[idx3 + 1] *= 0.92; velocities[idx3 + 2] *= 0.92;
+      pos2[idx3] += velocities[idx3] + (basePositions[idx3] - pos2[idx3]) * 0.03;
+      pos2[idx3 + 1] += velocities[idx3 + 1] + (basePositions[idx3 + 1] - pos2[idx3 + 1]) * 0.03;
+      pos2[idx3 + 2] += velocities[idx3 + 2] + (basePositions[idx3 + 2] - pos2[idx3 + 2]) * 0.03;
+    }
+    particleGeo.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
+  }
+  if (!reduce) { animate(); } else { renderer.render(scene, camera); }
 })();
 </script>
 
